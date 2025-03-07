@@ -178,44 +178,38 @@ class SlidePuzzle:
         #astar implementation
         frontier = PriorityQueue()
         frontier.put((heuristic(self), self.current_state))
+        possible_moves = self.get_possible_moves
+        start = self.current_state
 
         #the g_score is the path cost of each move
         g_score = {}
-        for possible_moves in self.current_state:
+        for possible_moves in start:
              g_score[possible_moves]=float('inf')
 
-        g_score[board.current_state] = 0
+        g_score[start] = 0
 
         f_score = {possible_moves: float('inf') for possible_moves in self.current_state}
-        f_score[self.current_state] = heuristic[self.current_state]
+        f_score[start] = heuristic[start]
 
         previous_positions = 0
-
+        
         while not frontier.empty():
-            current_f, current_position = frontier.get()
-            previous_positions += 1
+            for node in possible_moves:
+                tentative_g = g_score[node] + g_score[start]
 
-        
-        
-                
+                if tentative_g < g_score[node]:
+                    make_move(self, self.current_state[i], self.current_state[j])
+                    g_score[self.current_state] = tentative_g
+                    f_score[node] = g_score[node] + heuristic[node]
+                    frontier.put(f_score[node], node)
+        return None
 
-
-
-
-
-
-
+    
     def solve_game(self):
         #Implements astar to reach the goal state
-        astar(self, self.check_positions)
+        astar(self, self.check_position)
         return None
         
-
-
-            
-
-
-
 if __name__ == "__main__":
     root = tk.Tk()
     game = SlidePuzzle(root)
